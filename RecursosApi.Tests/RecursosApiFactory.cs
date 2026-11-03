@@ -8,10 +8,17 @@ using Microsoft.Extensions.Hosting;               // IHost, IHostBuilder
 
 public class RecursosApiFactory : WebApplicationFactory<Program>
 {
-    // Roda ANTES de a API subir: troca a connection string.
+    private readonly string _caminhoBanco;
+
+    public RecursosApiFactory()
+    {
+        _caminhoBanco = Path.Combine(Path.GetTempPath(), $"recursos-testes-{Guid.NewGuid():N}.db");
+    }
+
+    // Roda ANTES de a API subir: troca a connection string para um banco isolado.
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("ConnectionStrings:RecursosDb", "Data Source=recursos-testes.db");
+        builder.UseSetting("ConnectionStrings:RecursosDb", $"Data Source={_caminhoBanco}");
 
         // WEB 9 — NOVO: ambiente próprio dos testes (o seed de usuários só roda em Development).
         builder.UseEnvironment("Testing");
