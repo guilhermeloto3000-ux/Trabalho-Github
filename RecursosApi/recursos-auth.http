@@ -1,0 +1,79 @@
+### RecursosApi — Aula 8 de Web: matriz anônimo × ana (Usuario) × admin (Administrador)
+### Abrir no VS Code com a extensão REST Client e clicar em "Send Request" em cada bloco.
+@api = http://localhost:5137
+
+### 1) Login da ana (role Usuario) — guarda a resposta com o nome loginAna
+# @name loginAna
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "usuario": "ana", "senha": "SENHA-DA-ANA-NO-USER-SECRETS" }
+
+### 2) Login do admin (role Administrador)
+# @name loginAdmin
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "usuario": "admin", "senha": "SENHA-DO-ADMIN-NO-USER-SECRETS" }
+
+### 3) Senha errada -> 401 "Usuário ou senha inválidos"
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "usuario": "ana", "senha": "errada" }
+
+### 4) GET sem token -> 200 (listar é livre)
+GET {{api}}/recursos
+
+### 5) POST sem token -> 401
+POST {{api}}/recursos
+Content-Type: application/json
+
+{ "nome": "Sala sem login", "capacidade": 10 }
+
+### 6) POST com o token da ana -> 201
+POST {{api}}/recursos
+Content-Type: application/json
+Authorization: Bearer {{loginAna.response.body.token}}
+
+{ "nome": "Sala da Ana", "capacidade": 15 }
+
+### 7) DELETE com o token da ana -> 403 (logada, mas não é Administrador)
+DELETE {{api}}/recursos/1
+Authorization: Bearer {{loginAna.response.body.token}}
+
+### 8) DELETE com o token do admin -> 204
+DELETE {{api}}/recursos/1
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### 9) O que a API leu do token
+GET {{api}}/auth/eu
+Authorization: Bearer {{loginAna.response.body.token}}
+
+### ---------------------------------------------------------
+### WEB 9 — NOVO: cadastro de usuário (POST /auth/cadastro, livre)
+### ---------------------------------------------------------
+
+### C1) Cadastro novo -> 201 { "nome": "bia", "roles": ["Usuario"] }
+POST {{api}}/auth/cadastro
+Content-Type: application/json
+
+{ "usuario": "bia", "senha": "Senha.Bia123" }
+
+### C2) O mesmo nome de novo -> 409 "Usuário já existe"
+POST {{api}}/auth/cadastro
+Content-Type: application/json
+
+{ "usuario": "bia", "senha": "Senha.Bia123" }
+
+### C3) Senha fraca -> 400 com as regras que faltaram
+POST {{api}}/auth/cadastro
+Content-Type: application/json
+
+{ "usuario": "caio", "senha": "123" }
+
+### C4) Login da bia -> 200 com token (role Usuario)
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "usuario": "bia", "senha": "Senha.Bia123" }

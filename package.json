@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "concurrently \"dotnet run --project RecursosApi\" \"npm run dev --prefix recursos-frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

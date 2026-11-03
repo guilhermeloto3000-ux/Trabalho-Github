@@ -1,0 +1,19 @@
+@base = http://localhost:5137
+
+### Camada 0/1/2+: pedir análise
+POST {{base}}/recursos/1/analise
+
+### Pedir análise esperando vaga na fila (Camada 3)
+POST {{base}}/recursos/2/analise/espera
+
+### Andamento de uma análise
+GET {{base}}/recursos/1/analise
+
+### Painel da fila
+GET {{base}}/fila/status
+
+### Recurso inexistente (deve terminar como Falhou)
+POST {{base}}/recursos/9999/analise
+
+### Demo de condição de corrida
+GET {{base}}/demo/contador
