@@ -2,6 +2,7 @@
 using System.Net;                 // HttpStatusCode
 using System.Net.Http.Json;       // PostAsJsonAsync, ReadFromJsonAsync
 
+[Collection("BancoDeTestes")]   // mesma coleção da RecursosEndpointsTests: não roda em paralelo com ela
 public class AuthEndpointsTests : IClassFixture<RecursosApiFactory>
 {
     private readonly HttpClient _cliente;

@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;   // ProblemDetails
 
 // IClassFixture: o xUnit cria UMA fábrica para a classe toda e a entrega no
 // construtor. A API sobe uma vez, não uma vez por teste.
+// VERSÃO FINAL — NOVO: as duas classes de integração (esta e AuthEndpointsTests) usam o
+// MESMO recursos-testes.db. Na mesma [Collection], o xUnit roda uma classe depois da outra,
+// e uma não apaga o banco no meio dos testes da outra.
+[Collection("BancoDeTestes")]
 public class RecursosEndpointsTests : IClassFixture<RecursosApiFactory>
 {
     private readonly HttpClient _cliente;
@@ -137,5 +141,15 @@ public class RecursosEndpointsTests : IClassFixture<RecursosApiFactory>
         var resposta = await _clienteAdmin.DeleteAsync($"/recursos/{criado!.Id}");
 
         Assert.Equal(HttpStatusCode.NoContent, resposta.StatusCode);      // 204: removido
+    }
+
+    // AULA FINAL — NOVO: o endereço que o Render chama depois de cada deploy.
+    [Fact]
+    public async Task Health_Responde200()
+    {
+        var resposta = await _cliente.GetAsync("/health");
+
+        Assert.Equal(HttpStatusCode.OK, resposta.StatusCode);
+        Assert.Equal("Healthy", await resposta.Content.ReadAsStringAsync());
     }
 }   // fim da classe

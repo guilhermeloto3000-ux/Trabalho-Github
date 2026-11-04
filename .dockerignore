@@ -1,0 +1,12 @@
+# .dockerignore — AULA FINAL — NOVO
+# O que o "COPY" do Dockerfile ignora (igual à ideia do .gitignore).
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git/
+.vs/
+.vscode/

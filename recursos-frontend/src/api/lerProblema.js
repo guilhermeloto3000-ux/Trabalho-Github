@@ -1,4 +1,4 @@
-// lerProblema.js
+// api/lerProblema.js — AULA 7 (AULA FINAL — MUDOU DE LUGAR: estava em src/)
 // Transforma uma resposta de erro da API (Problem Details) em um texto para mostrar na tela.
 export async function lerProblema(resposta) {
   const tipo = resposta.headers.get('content-type') ?? '';

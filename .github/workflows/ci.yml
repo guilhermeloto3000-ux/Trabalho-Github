@@ -1,0 +1,25 @@
+# .github/workflows/ci.yml — AULA FINAL — NOVO
+# CI = Integração Contínua. A cada push (ou pull request) na main, o GitHub Actions
+# pega uma máquina limpa, baixa o código e executa os passos abaixo.
+# Se um passo falha, o commit fica com um X vermelho no GitHub.
+# No Render, o Auto-Deploy "After CI Checks Pass" só publica commits com o check verde:
+# teste quebrado = nada vai para o ar.
+name: CI
+
+on:                                        # (1) quando roda
+  push:         { branches: [main] }
+  pull_request: { branches: [main] }
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest                 # (2) máquina limpa, nova a cada vez
+    steps:
+      - uses: actions/checkout@v6          # (3) baixa o código
+      - uses: actions/setup-dotnet@v5      #     instala o .NET 10
+        with: { dotnet-version: '10.0.x' }
+      - run: dotnet test RecursosApi.Tests # (4) os 20 testes
+      - uses: actions/setup-node@v6        #     instala o Node 22
+        with: { node-version: 22 }
+      - run: |                             # (5) o React compila?
+          npm ci --prefix recursos-frontend
+          npm run build --prefix recursos-frontend
